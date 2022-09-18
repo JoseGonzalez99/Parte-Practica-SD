@@ -43,4 +43,22 @@ public class BancoJSON {
         return p;
 	}
     
+    public static String response(String str) throws Exception {
+    	JSONObject obj = new JSONObject();
+        obj.put("mensaje", str);
+         return obj.toJSONString();
+    	
+    }
+    
+    public static String read_response(String str) throws Exception {
+    	JSONParser parser = new JSONParser();
+
+        Object obj = parser.parse(str.trim());
+        JSONObject jsonObject = (JSONObject) obj;
+       
+        String msj = (String) jsonObject.get("mensaje");
+        return msj;
+    	
+    }
+    
 }

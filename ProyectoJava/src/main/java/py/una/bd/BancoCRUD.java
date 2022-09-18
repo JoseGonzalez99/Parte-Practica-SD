@@ -55,7 +55,7 @@ public class BancoCRUD {
 	}
     */
 	
-	public int seleccionarPorID(Integer ID) {
+	public List<Banco> seleccionarPorID(Integer ID) {
 		String SQL = "SELECT id,nombre FROM public.banco WHERE id = ? ";
 		
 		List<Banco> lista = new ArrayList<Banco>();
@@ -70,7 +70,7 @@ public class BancoCRUD {
         	ResultSet rs = pstmt.executeQuery();
 
         	while(rs.next()) {
-        		 System.out.println("Entro en el next " );
+        		 
         		Banco p = new Banco();
         		//p.setID(rs.getLong(1));
         		p.setID(rs.getInt(1)); 
@@ -90,8 +90,8 @@ public class BancoCRUD {
         		System.out.println("No se pudo cerrar la conexion a BD: "+ ef.getMessage());
         	}
         }
-        System.out.println("el tamano de la lista es " + lista.size());
-		return lista.size();
+     
+		return lista;
 
 	}
 	

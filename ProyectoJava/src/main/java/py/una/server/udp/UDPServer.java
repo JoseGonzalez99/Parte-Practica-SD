@@ -2,6 +2,7 @@ package py.una.server.udp;
 
 import java.io.*;
 import java.net.*;
+import java.util.List;
 
 import py.una.bd.BancoCRUD;
 import py.una.entidad.Banco;
@@ -12,7 +13,6 @@ public class UDPServer {
 	
     public static void main(String[] a){
         
-        // Variables
         int puertoServidor = 9876;
         BancoCRUD pdao = new BancoCRUD();
         
@@ -20,7 +20,8 @@ public class UDPServer {
             //1) Creamos el socket Servidor de Datagramas (UDP)
             DatagramSocket serverSocket = new DatagramSocket(puertoServidor);
 			
-            System.out.println("Servidor Sistemas Distribuidos - UDP - Proveedor de Cotizacion DOLAR $ ");
+     
+            System.out.println("Bienvenido al servidor UDP - Jose Elias Gonzalez Valdez \n");
 			
             //2) buffer de datos a enviar y recibir
             byte[] receiveData = new byte[1024];
@@ -31,19 +32,18 @@ public class UDPServer {
             while (true) {
                 receiveData = new byte[1024];
                 DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-                System.out.println("Esperando a algun cliente... ");
+                System.out.println("Esperando un cliente... ");
 
                 
                 // 4) Receive LLAMADA BLOQUEANTE
                 serverSocket.receive(receivePacket);
 				
 				System.out.println(" ");
-                System.out.println("Aceptamos un paquete");
-
+                
                 // Datos recibidos e Identificamos quien nos envio
                 String datoRecibido = new String(receivePacket.getData());
                 datoRecibido = datoRecibido.trim();
-                System.out.println("DatoRecibido: " + datoRecibido );
+           
 
                 //Convertimos el json recibido a un objeto para poder manipular
                 Banco p = BancoJSON.stringObjeto(datoRecibido);
@@ -53,30 +53,43 @@ public class UDPServer {
                 InetAddress IPAddress = receivePacket.getAddress();
                 int port = receivePacket.getPort();
                 
-                Integer fluctuacion=0;
+                
+                System.out.println("Estado de identificacion: ");
                 try {
-                        if (pdao.seleccionarPorID(p.getID())==1){
+                		
+                	
+                		List<Banco> lista = pdao.seleccionarPorID(p.getID());
+                        if (lista.size()==1){
+                        	Integer cotization=p.getCotizacion();
+                        	p= lista.get(0);
+                        	p.setCotizacion(cotization);
                         	
-                        	System.out.println("Banco identificado...");
+                        	//fluctuacion= generarfluctuacion();
+                        	System.out.println("Banco identificado \n Nombre: " + p.getNombre() + "\n Cotizacion recibida : 1$ = "+ p.getCotizacion()+ "Gs \n");
                         	
-                        	fluctuacion= generarfluctuacion();
+                        	//System.out.println("Valor de dolar " + fluctuacion.toString());
+                        	String msj="Gracias por su cotizacion "+p.getNombre();
+                        	sendData = BancoJSON.response(msj).getBytes();
                         	
-                        	System.out.println("Valor de dolar " + fluctuacion.toString());
-                        	
-                        	p.setCotizacion(fluctuacion);
+                        	//p.setCotizacion(fluctuacion);
+                            System.out.println("Finalizando conexion \n");
+
                         
                         }
                         else{
-                        System.out.println("El banco no esta registrado");
+                        	sendData = BancoJSON.response("Id no identificado ").getBytes();
+                        System.out.println("No identificado \n");
+                        	
 
                         }
                 }catch(Exception e) {
                 	System.out.println("Fallo de consulta de Banco a la Base de datos, razón: " + e.getLocalizedMessage());
                 }
                 
-
+                /*
+                 orignal
                 sendData = BancoJSON.objetoString(p).getBytes();
-
+*/
                 DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress,port);
 
                 serverSocket.send(sendPacket);
@@ -91,19 +104,6 @@ public class UDPServer {
     }
 
 
-    private static Integer generarfluctuacion(){
-    	/*
-    	 Generar numero aleatorio y luego convertirlo a string
-    	  */
-    	int Random = (int)(Math.random()*100);
-    	int randomOP = (int) (Math.random() * (1-0)) + 0;
-    	if(randomOP==1) {
-    		return 5800+Random;
-    	}else {
-    	return 5800-Random;
-    	}
-    	
-    }
 
 }  
 

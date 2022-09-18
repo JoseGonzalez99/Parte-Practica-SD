@@ -13,6 +13,7 @@ public class Banco {
 		
 	}
 
+
 	public Banco(Integer pId, String pnombre,Integer pcotizacion){
 		this.id = pId;
 		this.nombre = pnombre;
