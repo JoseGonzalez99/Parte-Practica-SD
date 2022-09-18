@@ -1,3 +1,24 @@
+# Parte Practica de Sistemas Distribuidos
+Estudiante: Jose Elias Gonzalez Valdez
+
+## Enunciado
+
+Escriba un programa servidor y un programa cliente TCP o UDP en lenguaje Java que reciba datos de la cotización del dólar de diversos bancos/financieras y los imprima en consola. Los datos de la cotización debe estar en formato JSON. Se asume que cada banco/financiera es un cliente y tiene un identificador único.
+
+
+## Pre configuración
+
+Para poder levantar es necesario tener maven, de modo a poder instalar las dependencias indicadas en el archivo pom.xml
+Luego  sigue la ejecución 
+- Del  archivo serverUDP.java para correr el servidor.
+- Del archivo clientUDP.java para correr un cliente
+
+
+
+## Description de código utilizado
+
+Para realizar esta tarea reutilice el código del laboratorio de **sockets**, la cual modifique para adaptarlo a los requerido.
+
 # Principales cambios
 ## Paquete py.una.entidad
 *  **Banco.java**
@@ -52,4 +73,7 @@ Ademas de que agregue dos metodos llamados response y read_response.
 Al igual que UDPServer,java, tecnicamente estamos ante el mismo codigo, no obstante los cambios realizados son.
 	* Se solicita que el operador del cliente ingrese el identificador del banco 
 	* Agregue un metodo llamado **generarfluctuacion** que genera la cotizacion de 1 dolar en guaranies.
+
+
+
 
